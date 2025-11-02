@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mastra + Next.js チャットアプリ
 
-## Getting Started
+このプロジェクトは、[Mastra](https://mastra.ai)と[Next.js](https://nextjs.org)を統合したAIチャットアプリケーションのテスト実装です。
 
-First, run the development server:
+## 機能
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js App Routerを使用
+- MastraによるAIエージェント統合
+- Vercel AI SDK UIによるストリーミングチャット
+- Anthropic Claude 3.5 Haikuモデルを使用
+
+## プロジェクト構造
+
+```
+mastra-test/
+├── app/
+│   ├── actions/
+│   │   └── chat.ts                # チャットServer Action
+│   └── page.tsx                   # チャットUIページ
+├── mastra/
+│   ├── agents/
+│   │   └── assistant-agent.ts    # Mastraエージェント定義
+│   └── index.ts                   # Mastraインスタンス
+├── docs/
+│   └── mastra-nextjs.md          # Mastraの完全ガイド
+├── .env.local                     # 環境変数
+├── next.config.ts                 # Next.js設定
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## セットアップ
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. 環境変数の設定
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env.local` ファイルにAnthropic Claude APIキーを設定してください：
 
-## Learn More
+```bash
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
+```
 
-To learn more about Next.js, take a look at the following resources:
+APIキーは以下から取得できます：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Anthropic: https://console.anthropic.com/
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. 依存関係のインストール
 
-## Deploy on Vercel
+```bash
+pnpm install
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. 開発サーバーの起動
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dev
+```
+
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてください。
+
+## 使い方
+
+1. チャット画面が表示されます
+2. メッセージを入力して送信
+3. AIがリアルタイムでストリーミング応答します
+
+## 主な技術スタック
+
+- **Next.js 15**: React フレームワーク
+- **Mastra**: AIエージェントフレームワーク
+- **Vercel AI SDK**: ストリーミングチャットUI
+- **Anthropic Claude 3.5 Haiku**: 言語モデル
+- **TypeScript**: 型安全な開発
+- **Tailwind CSS**: スタイリング
+
+## Mastraについて
+
+Mastraは、TypeScript製のAIエージェントフレームワークです。詳細については `docs/mastra-nextjs.md` をご覧ください。
+
+### 主な特徴
+
+- TypeScriptネイティブで型安全
+- エージェント、ワークフロー、RAG、メモリを統合
+- 40以上のLLMプロバイダーに対応
+- Next.js/React完全統合
+
+## 次のステップ
+
+- `mastra/agents/assistant-agent.ts` でエージェントの指示を変更
+- カスタムツールの追加
+- メモリ機能の追加（会話履歴の保持）
+- RAGの実装（ドキュメント検索）
+
+## リソース
+
+- [Next.js ドキュメント](https://nextjs.org/docs)
+- [Mastra ドキュメント](https://mastra.ai/docs)
+- [Vercel AI SDK](https://sdk.vercel.ai/docs)
+
+## デプロイ
+
+Vercelへのデプロイが最も簡単です：
+
+1. GitHubにプッシュ
+2. [Vercel](https://vercel.com)でインポート
+3. 環境変数 `ANTHROPIC_API_KEY` を設定
+4. デプロイ
+
+詳細は `docs/mastra-nextjs.md` のデプロイセクションを参照してください。

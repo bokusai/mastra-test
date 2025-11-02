@@ -1,6 +1,7 @@
 # Mastra完全ガイド - ローカル環境構築からチャットUI実装まで
 
 ## 目次
+
 1. [Mastraとは](#mastraとは)
 2. [環境準備](#環境準備)
 3. [クイックスタート](#クイックスタート)
@@ -17,6 +18,7 @@
 **Mastra**は、Gatsby.jsを開発したチームによるTypeScript製のAIエージェントフレームワークです。
 
 ### 主な特徴
+
 - ✅ TypeScriptネイティブ（型安全）
 - ✅ エージェント、ワークフロー、RAG、メモリを統合
 - ✅ 40以上のLLMプロバイダーに対応
@@ -25,34 +27,39 @@
 - ✅ ローカル開発プレイグラウンド付き
 
 ### DifyやN8Nとの違い
-| 項目 | Dify/N8N | Mastra |
-|------|----------|--------|
-| 言語 | Python + Node.js | TypeScriptのみ |
-| 必須DB | PostgreSQL + Redis | オプション（LibSQLで可） |
-| セットアップ | Docker Compose必須 | npm installのみ |
-| UI | GUI中心 | コード中心 |
-| 対象 | ノーコード/ローコード | プログラマー |
+
+| 項目         | Dify/N8N              | Mastra                   |
+| ------------ | --------------------- | ------------------------ |
+| 言語         | Python + Node.js      | TypeScriptのみ           |
+| 必須DB       | PostgreSQL + Redis    | オプション（LibSQLで可） |
+| セットアップ | Docker Compose必須    | npm installのみ          |
+| UI           | GUI中心               | コード中心               |
+| 対象         | ノーコード/ローコード | プログラマー             |
 
 ---
 
 ## 環境準備
 
 ### 必須要件
+
 - Node.js 20以上
 - LLM APIキー（OpenAI、Anthropic、Gemini等）
 
 ### 推奨要件
+
 - PostgreSQL 14以上（本番環境の場合）
 - Git
 
 ### APIキーの取得
 
 **OpenAI（推奨）:**
+
 1. https://platform.openai.com/ にアクセス
 2. API Keysセクションで新規作成
 3. `sk-...` で始まるキーをコピー
 
 **Google Gemini（無料枠あり）:**
+
 1. https://aistudio.google.com/app/apikey にアクセス
 2. Create API keyをクリック
 3. キーをコピー
@@ -128,7 +135,7 @@ npm install @mastra/core @mastra/ai-sdk zod
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ["@mastra/*"], // ← 重要！
+  serverExternalPackages: ['@mastra/*'], // ← 重要！
 };
 
 module.exports = nextConfig;
@@ -138,13 +145,13 @@ module.exports = nextConfig;
 
 ```typescript
 // mastra/agents/assistant-agent.ts
-import { Agent } from "@mastra/core/agent";
-import { openai } from "@ai-sdk/openai";
+import { Agent } from '@mastra/core/agent';
+import { openai } from '@ai-sdk/openai';
 
 export const assistantAgent = new Agent({
-  name: "assistant",
-  instructions: "あなたは親切なAIアシスタントです。日本語で回答してください。",
-  model: openai("gpt-4o-mini"),
+  name: 'assistant',
+  instructions: 'あなたは親切なAIアシスタントです。日本語で回答してください。',
+  model: openai('gpt-4o-mini'),
 });
 ```
 
@@ -152,8 +159,8 @@ export const assistantAgent = new Agent({
 
 ```typescript
 // mastra/index.ts
-import { Mastra } from "@mastra/core";
-import { assistantAgent } from "./agents/assistant-agent";
+import { Mastra } from '@mastra/core';
+import { assistantAgent } from './agents/assistant-agent';
 
 export const mastra = new Mastra({
   agents: {
@@ -166,11 +173,11 @@ export const mastra = new Mastra({
 
 ```typescript
 // app/actions/chat.ts
-"use server";
-import { mastra } from "@/mastra";
+'use server';
+import { mastra } from '@/mastra';
 
 export async function sendMessage(message: string) {
-  const agent = mastra.getAgent("assistant");
+  const agent = mastra.getAgent('assistant');
   const result = await agent.generate(message);
   return result.text;
 }
@@ -190,21 +197,21 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // ユーザーメッセージを追加
     setMessages(prev => [...prev, { role: "user", content: input }]);
-    
+
     // AIの応答を取得
     const response = await sendMessage(input);
     setMessages(prev => [...prev, { role: "assistant", content: response }]);
-    
+
     setInput("");
   };
 
   return (
     <main className="flex flex-col h-screen p-4">
       <h1 className="text-2xl font-bold mb-4">AIチャット</h1>
-      
+
       {/* メッセージ表示 */}
       <div className="flex-1 overflow-y-auto mb-4 space-y-2">
         {messages.map((msg, i) => (
@@ -215,7 +222,7 @@ export default function Home() {
           </div>
         ))}
       </div>
-      
+
       {/* 入力フォーム */}
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
@@ -250,20 +257,20 @@ cd backend
 
 ```typescript
 // src/mastra/agents/assistant-agent.ts
-import { Agent } from "@mastra/core/agent";
-import { openai } from "@ai-sdk/openai";
+import { Agent } from '@mastra/core/agent';
+import { openai } from '@ai-sdk/openai';
 
 export const assistantAgent = new Agent({
-  name: "assistant",
-  instructions: "あなたは親切なAIアシスタントです。",
-  model: openai("gpt-4o-mini"),
+  name: 'assistant',
+  instructions: 'あなたは親切なAIアシスタントです。',
+  model: openai('gpt-4o-mini'),
 });
 ```
 
 ```typescript
 // src/mastra/index.ts
-import { Mastra } from "@mastra/core";
-import { assistantAgent } from "./agents/assistant-agent";
+import { Mastra } from '@mastra/core';
+import { assistantAgent } from './agents/assistant-agent';
 
 export const mastra = new Mastra({
   agents: { assistant: assistantAgent },
@@ -290,10 +297,10 @@ npm install @mastra/client-js
 
 ```typescript
 // lib/mastra-client.ts
-import { MastraClient } from "@mastra/client-js";
+import { MastraClient } from '@mastra/client-js';
 
 export const mastraClient = new MastraClient({
-  baseUrl: process.env.NEXT_PUBLIC_MASTRA_URL || "http://localhost:4111",
+  baseUrl: process.env.NEXT_PUBLIC_MASTRA_URL || 'http://localhost:4111',
 });
 ```
 
@@ -316,13 +323,13 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setMessages(prev => [...prev, { role: "user", content: input }]);
-    
+
     // Mastraサーバーを呼び出し
     const agent = mastraClient.getAgent("assistant");
     const result = await agent.generate(input);
-    
+
     setMessages(prev => [...prev, { role: "assistant", content: result.text }]);
     setInput("");
   };
@@ -349,16 +356,16 @@ npm install @ai-sdk/react @mastra/ai-sdk
 
 ```typescript
 // app/api/chat/route.ts
-import { mastra } from "@/mastra";
+import { mastra } from '@/mastra';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  
-  const agent = mastra.getAgent("assistant");
-  const stream = await agent.stream(messages, { 
-    format: "aisdk" 
+
+  const agent = mastra.getAgent('assistant');
+  const stream = await agent.stream(messages, {
+    format: 'aisdk',
   });
-  
+
   return stream.toUIMessageStreamResponse();
 }
 ```
@@ -378,7 +385,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">AIチャット</h1>
-      
+
       {/* メッセージ表示 */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4">
         {messages.map((message) => (
@@ -436,12 +443,12 @@ npm install @assistant-ui/react @assistant-ui/react-ai-sdk
 
 ```typescript
 // app/api/chat/route.ts
-import { mastra } from "@/mastra";
+import { mastra } from '@/mastra';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  const agent = mastra.getAgent("assistant");
-  const stream = await agent.stream(messages, { format: "aisdk" });
+  const agent = mastra.getAgent('assistant');
+  const stream = await agent.stream(messages, { format: 'aisdk' });
   return stream.toUIMessageStreamResponse();
 }
 ```
@@ -482,21 +489,21 @@ export default function Home() {
 
 ```typescript
 // mastra/index.ts
-import { Mastra } from "@mastra/core";
-import { LibSQLStore, LibSQLVector } from "@mastra/libsql";
-import { Memory } from "@mastra/memory";
-import { assistantAgent } from "./agents/assistant-agent";
+import { Mastra } from '@mastra/core';
+import { LibSQLStore, LibSQLVector } from '@mastra/libsql';
+import { Memory } from '@mastra/memory';
+import { assistantAgent } from './agents/assistant-agent';
 
 export const mastra = new Mastra({
   storage: new LibSQLStore({
-    url: "file:./mastra.db", // ファイルベース
+    url: 'file:./mastra.db', // ファイルベース
   }),
   agents: {
     assistant: new Agent({
       ...assistantAgent,
       memory: new Memory({
-        storage: new LibSQLStore({ url: "file:./mastra.db" }),
-        vector: new LibSQLVector({ connectionUrl: "file:./mastra.db" }),
+        storage: new LibSQLStore({ url: 'file:./mastra.db' }),
+        vector: new LibSQLVector({ connectionUrl: 'file:./mastra.db' }),
       }),
     }),
   },
@@ -508,12 +515,14 @@ export const mastra = new Mastra({
 #### PostgreSQLのインストール
 
 **Mac:**
+
 ```bash
 brew install postgresql@14
 brew services start postgresql@14
 ```
 
 **Ubuntu:**
+
 ```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
@@ -542,12 +551,12 @@ npm install @mastra/pg
 
 ```typescript
 // mastra/index.ts
-import { Mastra } from "@mastra/core";
-import { PostgresStore, PgVector } from "@mastra/pg";
-import { Memory } from "@mastra/memory";
-import { openai } from "@ai-sdk/openai";
+import { Mastra } from '@mastra/core';
+import { PostgresStore, PgVector } from '@mastra/pg';
+import { Memory } from '@mastra/memory';
+import { openai } from '@ai-sdk/openai';
 
-const DB_URL = process.env.DATABASE_URL || "postgresql://localhost:5432/mastra_db";
+const DB_URL = process.env.DATABASE_URL || 'postgresql://localhost:5432/mastra_db';
 
 export const mastra = new Mastra({
   storage: new PostgresStore({
@@ -555,13 +564,13 @@ export const mastra = new Mastra({
   }),
   agents: {
     assistant: new Agent({
-      name: "assistant",
-      instructions: "...",
-      model: openai("gpt-4o-mini"),
+      name: 'assistant',
+      instructions: '...',
+      model: openai('gpt-4o-mini'),
       memory: new Memory({
         storage: new PostgresStore({ connectionString: DB_URL }),
         vector: new PgVector({ connectionString: DB_URL }),
-        embedder: openai.embedding("text-embedding-3-small"),
+        embedder: openai.embedding('text-embedding-3-small'),
         options: {
           lastMessages: 10,
           semanticRecall: {
@@ -590,7 +599,7 @@ npm install @mastra/pg
 
 ```typescript
 // mastra/index.ts
-import { PostgresStore, PgVector } from "@mastra/pg";
+import { PostgresStore, PgVector } from '@mastra/pg';
 
 const mastra = new Mastra({
   storage: new PostgresStore({
@@ -682,29 +691,33 @@ pm2 startup
 #### 1. `Module not found: Can't resolve '@mastra/core'`
 
 **解決策:**
+
 ```bash
 npm install @mastra/core@latest
 ```
 
 next.config.jsに以下を追加:
+
 ```javascript
-serverExternalPackages: ["@mastra/*"]
+serverExternalPackages: ['@mastra/*'];
 ```
 
 #### 2. `LibSQLStore is not a constructor`
 
 **解決策:**
+
 ```typescript
 // 間違い
-import LibSQLStore from "@mastra/libsql";
+import LibSQLStore from '@mastra/libsql';
 
 // 正しい
-import { LibSQLStore } from "@mastra/libsql";
+import { LibSQLStore } from '@mastra/libsql';
 ```
 
 #### 3. PostgreSQLに接続できない
 
 **解決策:**
+
 ```bash
 # PostgreSQLが起動しているか確認
 pg_isready
@@ -716,6 +729,7 @@ psql postgresql://localhost:5432/mastra_db
 #### 4. APIキーエラー
 
 **解決策:**
+
 ```bash
 # .env.developmentまたは.env.localが正しい場所にあるか確認
 ls -la .env*
@@ -727,10 +741,11 @@ echo $OPENAI_API_KEY
 #### 5. チャットがストリーミングしない
 
 **解決策:**
+
 ```typescript
 // API Routeで format: "aisdk" を指定
-const stream = await agent.stream(messages, { 
-  format: "aisdk" // ← 重要！
+const stream = await agent.stream(messages, {
+  format: 'aisdk', // ← 重要！
 });
 ```
 
@@ -797,6 +812,7 @@ export const mastra = new Mastra({
 Mastraを使えば、TypeScriptだけで本格的なAIエージェントアプリケーションを構築できます。
 
 **特徴:**
+
 - 🚀 セットアップが簡単（5分で起動）
 - 💪 本番環境対応（スケール可能）
 - 🔧 フレキシブル（必要な機能だけ使える）
